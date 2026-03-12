@@ -1,0 +1,27 @@
+name: Sincronizador de Ventas Martel
+
+on:
+  schedule:
+    # Corre al minuto 10 de cada hora
+    - cron: '10 * * * *'
+  workflow_dispatch: # Permite correrlo manualmente 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar Drivers y Librerías
+        run: |
+          sudo apt-get install -y unixodbc-dev
+          pip install pandas sqlalchemy pyodbc psycopg2-binary
+
+      - name: Ejecutar Script de Sincronización
+        run: python sync_ventas.py
